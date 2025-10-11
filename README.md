@@ -26,7 +26,7 @@ The calculator uses:
 
 ## 🚀 Live Demo
 
-[Add your deployment URL here once deployed]
+https://insurance-premium-calculator-emtf.onrender.com/
 
 ## 💻 Local Setup
 ```bash
