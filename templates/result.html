@@ -67,6 +67,18 @@
                     <span>{{ gender.capitalize() }}</span>
                 </div>
                 <div class="factor-item">
+                    <span><strong>Height:</strong></span>
+                    <span>{{ height_feet }}' {{ height_inches }}''</span>
+                </div>
+                <div class="factor-item">
+                    <span><strong>Weight:</strong></span>
+                    <span>{{ weight_kilogram }}kg {{ weight_grams }}gms</span>
+                </div>
+                <div class="factor-item">
+                    <span><strong>BMI:</strong></span>
+                    <span>{{ bmi }}</span>
+                </div>
+                <div class="factor-item">
                     <span><strong>Coverage Amount:</strong></span>
                     <span>₹{{ "{:,.0f}".format(coverage) }}</span>
                 </div>
@@ -99,9 +111,26 @@
                 <p class="text-muted small mb-3">
                     Formula: Coverage Amount × Mortality Rate = ₹{{ "{:,.0f}".format(coverage) }} × {{ "%.4f" % result.base_rate }}
                 </p>
-                
                 <div class="factor-item">
-                    <span><strong>Step 3: Risk Adjustment (Smoking)</strong></span>
+                    <span><strong>Step 3: BMI Factor</strong></span>
+                    {% if result.bmi_factor > 1 %}
+                    <span>{{ "%.0f" % ((result.bmi_factor - 1) * 100) }}% increase</span>
+                    {% elif result.bmi_factor < 1 %}
+                    <span>{{ ""%.0f" % ((result.bmi_factor - 1) * 100) }}% decrease</span>
+                    {% else %}
+                    <span>no change</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted small mb-3">
+                    {% if result.bmi_factor > 1 %}
+                    A higher BMI slightly increase the premium due to increased health risk.
+                    {% elif result.bmi_factor < 1 %}
+                    Lower BMI reduces the premium.
+                    {% Your BMI is within a healthy range, so no adjustment was made. %}
+                    {% endif %}
+                </p>
+                <div class="factor-item">
+                    <span><strong>Step 4: Risk Adjustment (Smoking)</strong></span>
                     <span>{{ "%.0f" % ((result.smoking_factor - 1) * 100) }}% {{ "increase" if smoker else "no change" }}</span>
                 </div>
                 <p class="text-muted small mb-3">
@@ -113,7 +142,7 @@
                 </p>
                 
                 <div class="factor-item">
-                    <span><strong>Step 4: Loading Factor</strong></span>
+                    <span><strong>Step 5: Loading Factor</strong></span>
                     <span>{{ "%.0f" % ((result.loading - 1) * 100) }}% added</span>
                 </div>
                 <p class="text-muted small mb-3">

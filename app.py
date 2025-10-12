@@ -21,6 +21,8 @@ class PremiumCalculator:
                 '61-65': 0.0070
             }
         }
+    def get_BMI(self, weight,height):
+        return weight/(height*height)
     
     def get_age_group(self, age):
         if age <= 30:
@@ -34,7 +36,7 @@ class PremiumCalculator:
         else:
             return '61-65'
     
-    def calculate(self, age, gender, smoker, coverage):
+    def calculate(self, age, gender, smoker, coverage,bmi):
         # Get base mortality rate
         age_group = self.get_age_group(age)
         base_rate = self.base_rate[gender][age_group]
@@ -43,12 +45,19 @@ class PremiumCalculator:
         # Premium = Coverage × Mortality Rate
         base_premium = coverage * base_rate
         
+        # Add BMI factor
+        bmi_multiplier = 1.0
+        if bmi<18.5:
+            bmi_multiplier = 1.1
+        elif bmi>25:
+            bmi_multiplier = 1.2
+
         # Apply risk factors
         smoking_multiplier = 1.0
         if smoker:
             smoking_multiplier = 1.3  # 30% increase for smokers
         
-        risk_adjusted_premium = base_premium * smoking_multiplier
+        risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier
         
         # Add loading for expenses and profit (25%)
         loading_factor = 1.25
@@ -60,8 +69,10 @@ class PremiumCalculator:
             'base_rate': base_rate,
             'base_premium': round(base_premium, 2),
             'smoking_factor': smoking_multiplier,
+            'bmi_factor': bmi_multiplier,
             'loading': loading_factor,
-            'age_group': age_group
+            'age_group': age_group,
+            'bmi': round(bmi,2)
         }
 
 @app.route('/')
@@ -73,8 +84,16 @@ def calculate():
     # Get form data
     age = int(request.form['age'])
     gender = request.form['gender']
+    height_feet = float(request.form['height_feet'])
+    height_inches = float(request.form['height_inches'])
+    total_height = (height_feet*12 + height_inches) * 0.0254
+    weight_kilogram = float(request.form['weight_kilogram'])
+    weight_grams = float(request.form['weight_grams'])
+    total_weight = weight_kilogram + (weight_grams/1000)
+    weight = request.form['weight']
     smoker = request.form.get('smoker') == 'yes'
     coverage = int(request.form['coverage'])
+    bmi = calc.get_BMI(total_weight,total_height)
     
     # Calculate premium
     calc = PremiumCalculator()
@@ -86,7 +105,12 @@ def calculate():
                          age=age, 
                          gender=gender, 
                          smoker=smoker, 
-                         coverage=coverage)
+                         coverage=coverage,
+                         height_feet=height_feet,
+                         height_inches=height_inches,
+                         weight_kilogram=weight_kilogram,
+                         weight_grams=weight_grams,
+                         bmi=bmi)
 
 if __name__ == '__main__':
     import os
