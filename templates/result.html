@@ -116,7 +116,7 @@
                     {% if result.bmi_factor > 1 %}
                     <span>{{ "%.0f" % ((result.bmi_factor - 1) * 100) }}% increase</span>
                     {% elif result.bmi_factor < 1 %}
-                    <span>{{ ""%.0f" % ((result.bmi_factor - 1) * 100) }}% decrease</span>
+                    <span>{{ "%.0f" % ((1 - result.bmi_factor) * 100) }}% decrease</span>
                     {% else %}
                     <span>no change</span>
                     {% endif %}
@@ -126,9 +126,11 @@
                     A higher BMI slightly increase the premium due to increased health risk.
                     {% elif result.bmi_factor < 1 %}
                     Lower BMI reduces the premium.
-                    {% Your BMI is within a healthy range, so no adjustment was made. %}
+                    {% else %}
+                    Your BMI is within a healthy range, so no adjustment was made.
                     {% endif %}
                 </p>
+
                 <div class="factor-item">
                     <span><strong>Step 4: Risk Adjustment (Smoking)</strong></span>
                     <span>{{ "%.0f" % ((result.smoking_factor - 1) * 100) }}% {{ "increase" if smoker else "no change" }}</span>

@@ -21,7 +21,7 @@ class PremiumCalculator:
                 '61-65': 0.0070
             }
         }
-    def get_BMI(self, weight,height):
+    def get_BMI(self, weight, height):
         return weight/(height*height)
     
     def get_age_group(self, age):
@@ -36,7 +36,7 @@ class PremiumCalculator:
         else:
             return '61-65'
     
-    def calculate(self, age, gender, smoker, coverage,bmi):
+    def calculate(self, age, gender, smoker, coverage, bmi):
         # Get base mortality rate
         age_group = self.get_age_group(age)
         base_rate = self.base_rate[gender][age_group]
@@ -47,9 +47,13 @@ class PremiumCalculator:
         
         # Add BMI factor
         bmi_multiplier = 1.0
-        if bmi<18.5:
+        if bmi < 18.5:
             bmi_multiplier = 1.1
-        elif bmi>25:
+        elif 18.5 <= bmi <= 22:
+            bmi_multiplier = 0.95
+        elif 22 < bmi <= 25:
+            bmi_multiplier = 1.0
+        elif bmi > 25:
             bmi_multiplier = 1.2
 
         # Apply risk factors
@@ -86,18 +90,17 @@ def calculate():
     gender = request.form['gender']
     height_feet = float(request.form['height_feet'])
     height_inches = float(request.form['height_inches'])
-    total_height = (height_feet*12 + height_inches) * 0.0254
+    total_height = (height_feet * 12 + height_inches) * 0.0254
     weight_kilogram = float(request.form['weight_kilogram'])
     weight_grams = float(request.form['weight_grams'])
-    total_weight = weight_kilogram + (weight_grams/1000)
-    weight = request.form['weight']
+    total_weight = weight_kilogram + (weight_grams / 1000)
     smoker = request.form.get('smoker') == 'yes'
     coverage = int(request.form['coverage'])
-    bmi = calc.get_BMI(total_weight,total_height)
     
     # Calculate premium
     calc = PremiumCalculator()
-    result = calc.calculate(age, gender, smoker, coverage)
+    bmi = calc.get_BMI(total_weight,total_height)
+    result = calc.calculate(age, gender, smoker, coverage, bmi)
     
     # Pass both result and input data to template
     return render_template('result.html', 
@@ -110,7 +113,7 @@ def calculate():
                          height_inches=height_inches,
                          weight_kilogram=weight_kilogram,
                          weight_grams=weight_grams,
-                         bmi=bmi)
+                         bmi=round(bmi,2))
 
 if __name__ == '__main__':
     import os
