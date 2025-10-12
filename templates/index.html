@@ -44,7 +44,17 @@
                         <option value="female">Female</option>
                     </select>
                 </div>
-                
+
+                <div class="mb-3">
+                    <label for="height" class="form-label">Height</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="height_feet" name="height_feet" placeholder="Feet" min="0" required>
+                        <span class="input-group-text">ft</span>
+                        <input type="number" class="form-control" id="height_inches" name="height_inches" placeholder="Inches" min="0" max="11" required>
+                        <span class="input-group-text">in</span>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label for="coverage" class="form-label">Coverage Amount (₹)</label>
                     <input type="number" class="form-control" id="coverage" name="coverage" 
