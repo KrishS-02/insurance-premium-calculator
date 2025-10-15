@@ -63,9 +63,9 @@ class PremiumCalculator:
 
         tobacco_multiplier = 1.0
         if chewer:
-            tobacco_multiplier = 
+            tobacco_multiplier = 1.4;
         
-        risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier
+        risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier * tobacco_multiplier
         
         # Add loading for expenses and profit (25%)
         loading_factor = 1.25
