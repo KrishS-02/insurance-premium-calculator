@@ -74,10 +74,31 @@
                 <div class="mb-3">
                     <label for="smoker" class="form-label">Do you smoke?</label>
                     <select class="form-select" id="smoker" name="smoker" required>
+                        <option value="">Select an option</option>
+                        <option value="non-smoker">Non-Smoker</option>
+                        <option value="former-smoker">Former Smoker</option>
+                        <option value="light-smoker">Light Smoker</option>
+                        <option value="moderate-smoker">Moderate Smoker</option>
+                        <option value="heavy-smoker">Heavy Smoker</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="chewer" class="form-label">Do you chew tobacco?</label>
+                    <select class="form-select" id="chewer" name="chewer" required>
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
                     </select>
                 </div>
+
+                <div class="mb-3">
+                    <label for="alcoholic" class="form-label">Do you consume Alcohol?</label>
+                    <select class="form-select" id="alcoholic" name="alcoholic" required>
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+
                 
                 <button type="submit" class="btn btn-primary w-100 mt-3">
                     Calculate Premium

@@ -36,7 +36,7 @@ class PremiumCalculator:
         else:
             return '61-65'
     
-    def calculate(self, age, gender, smoker, coverage, bmi):
+    def calculate(self, age, gender, smoker, coverage, bmi, chewer, alcoholic):
         # Get base mortality rate
         age_group = self.get_age_group(age)
         base_rate = self.base_rate[gender][age_group]
@@ -60,6 +60,10 @@ class PremiumCalculator:
         smoking_multiplier = 1.0
         if smoker:
             smoking_multiplier = 1.3  # 30% increase for smokers
+
+        tobacco_multiplier = 1.0
+        if chewer:
+            tobacco_multiplier = 
         
         risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier
         
@@ -95,6 +99,8 @@ def calculate():
     weight_grams = float(request.form['weight_grams'])
     total_weight = weight_kilogram + (weight_grams / 1000)
     smoker = request.form.get('smoker') == 'yes'
+    tobacco_chewer = request.form.get('chewer') == 'yes'
+    alcoholic = request.form.get('alcoholic') == 'yes'
     coverage = int(request.form['coverage'])
     
     # Calculate premium
