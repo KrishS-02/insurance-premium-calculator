@@ -63,7 +63,7 @@ class PremiumCalculator:
 
         tobacco_multiplier = 1.0
         if chewer:
-            tobacco_multiplier = 1.4;
+            tobacco_multiplier = 1.4
         
         risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier * tobacco_multiplier
         
