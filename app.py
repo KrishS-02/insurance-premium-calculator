@@ -64,8 +64,13 @@ class PremiumCalculator:
         tobacco_multiplier = 1.0
         if chewer:
             tobacco_multiplier = 1.4
+
+        alcohol_multiplier = 1.0
+        if alcoholic:
+            alcohol_multiplier = 1.2
         
-        risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier * tobacco_multiplier
+        
+        risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier * tobacco_multiplier * alcohol_multiplier
         
         # Add loading for expenses and profit (25%)
         loading_factor = 1.25
@@ -77,6 +82,8 @@ class PremiumCalculator:
             'base_rate': base_rate,
             'base_premium': round(base_premium, 2),
             'smoking_factor': smoking_multiplier,
+            'tobacco_factor': tobacco_multiplier,
+            'alochol_factor': alcohol_multiplier,
             'bmi_factor': bmi_multiplier,
             'loading': loading_factor,
             'age_group': age_group,
@@ -106,14 +113,16 @@ def calculate():
     # Calculate premium
     calc = PremiumCalculator()
     bmi = calc.get_BMI(total_weight,total_height)
-    result = calc.calculate(age, gender, smoker, coverage, bmi)
+    result = calc.calculate(age, gender, smoker, tobacco_chewer, alcoholic, coverage, bmi)
     
     # Pass both result and input data to template
     return render_template('result.html', 
                          result=result, 
                          age=age, 
                          gender=gender, 
-                         smoker=smoker, 
+                         smoker=smoker,
+                         tobacco_chewer = tobacco_chewer,
+                         alcoholic = alcoholic,
                          coverage=coverage,
                          height_feet=height_feet,
                          height_inches=height_inches,
