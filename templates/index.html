@@ -41,6 +41,7 @@
                     <label for="gender" class="form-label">Gender</label>
                     <select class="form-select" id="gender" name="gender" required>
                         <option value="">Select gender</option>
+                        <option value="" disabled selected>Select an option</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
@@ -75,7 +76,7 @@
                 <div class="mb-3">
                     <label for="smoker" class="form-label">Do you smoke?</label>
                     <select class="form-select" id="smoker" name="smoker" required>
-                        <option value="">Select an option</option>
+                        <option value="" disabled selected>Select an option</option>
                         <option value="non-smoker">Non-Smoker</option>
                         <option value="former-smoker">Former Smoker</option>
                         <option value="light-smoker">Light Smoker</option>
@@ -87,15 +88,20 @@
                 <div class="mb-3">
                     <label for="chewer" class="form-label">Do you chew tobacco?</label>
                     <select class="form-select" id="chewer" name="chewer" required>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="non-chewer">Non-Chewer</option>
+                        <option value="former-chewer">Former Chewer</option>
+                        <option value="occasional-chewer">Occasional Chewer</option>
+                        <option value="regular-chewer">Regular Chewer</option>
+                        <option value="heavy-chewer">Heavy Chewer</option>
                     </select>
+
                 </div>
 
                 <div class="mb-3">
                     <label for="alcoholic" class="form-label">Do you consume Alcohol?</label>
                     <select class="form-select" id="alcoholic" name="alcoholic" required>
-                        <option value="">Select an option</option>
+                        <option value="" disabled selected>Select an option</option>
                         <option value="non-alcoholic">Non-Alcoholic</option>
                         <option value="former-drinker">Former Drinker</option>
                         <option value="light-drinker">Light Drinker</option>
