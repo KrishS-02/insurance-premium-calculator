@@ -14,7 +14,7 @@ MORTALITY_TABLE = {
                 '61-65': 0.0070
             }
         }
- def get_age_group(age):
+def get_age_group(age):
         if age <= 30:
             return '18-30'
         elif age <= 40:

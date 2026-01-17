@@ -17,7 +17,7 @@ SMOKING_RISK = {
      "light-smoker" = 1.2,
      "moderate-smoker" = 1.3,
      "heavy-smoker" = 1.5
-}
+    }
 
 TOBACCO_RISK = {
      "non-chewer" = 1.0,
@@ -25,7 +25,7 @@ TOBACCO_RISK = {
      "occasional-chewer" = 1.2,
      "regular-chewer" = 1.3,
      "heavy-chewer" = 1.5
-}
+    }
 
 ALCOHOL_RISK = {
      "non-alcoholic" = 1.0,
@@ -33,4 +33,4 @@ ALCOHOL_RISK = {
      "light-drinker" = 1.15,
      "moderate-drinker" = 1.25,
      "heavy-drinker" = 1.4
-}
+    }
