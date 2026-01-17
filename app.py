@@ -1,94 +1,14 @@
 from flask import Flask, render_template, request
+from services.calculator import PremiumCalculator
+from services.risk import (
+    calculate_BMI,
+    bmi_multiplier,
+    SMOKING_RISK,
+    ALCOHOL_RISK,
+    TOBACCO_RISK
+)
 
 app = Flask(__name__)
-
-class PremiumCalculator:
-    def __init__(self):
-        # Simplified mortality rates by age group and gender
-        self.base_rate = {
-            'male': {
-                '18-30': 0.0010,
-                '31-40': 0.0015,
-                '41-50': 0.0025,
-                '51-60': 0.0045,
-                '61-65': 0.0080
-            },
-            'female': {
-                '18-30': 0.0008,
-                '31-40': 0.0012,
-                '41-50': 0.0020,
-                '51-60': 0.0038,
-                '61-65': 0.0070
-            }
-        }
-    def get_BMI(self, weight, height):
-        return weight/(height*height)
-    
-    def get_age_group(self, age):
-        if age <= 30:
-            return '18-30'
-        elif age <= 40:
-            return '31-40'
-        elif age <= 50:
-            return '41-50'
-        elif age <= 60:
-            return '51-60'
-        else:
-            return '61-65'
-    
-    def calculate(self, age, gender, smoker, coverage, bmi, chewer, alcoholic):
-        # Get base mortality rate
-        age_group = self.get_age_group(age)
-        base_rate = self.base_rate[gender][age_group]
-        
-        # Calculate base premium using actuarial formula
-        # Premium = Coverage × Mortality Rate
-        base_premium = coverage * base_rate
-        
-        # Add BMI factor
-        bmi_multiplier = 1.0
-        if bmi < 18.5:
-            bmi_multiplier = 1.1
-        elif 18.5 <= bmi <= 22:
-            bmi_multiplier = 0.95
-        elif 22 < bmi <= 25:
-            bmi_multiplier = 1.0
-        elif bmi > 25:
-            bmi_multiplier = 1.2
-
-        # Apply risk factors
-        smoking_multiplier = 1.0
-        if smoker:
-            smoking_multiplier = 1.3  # 30% increase for smokers
-
-        tobacco_multiplier = 1.0
-        if chewer:
-            tobacco_multiplier = 1.4
-
-        alcohol_multiplier = 1.0
-        if alcoholic:
-            alcohol_multiplier = 1.2
-        
-        
-        risk_adjusted_premium = base_premium * smoking_multiplier * bmi_multiplier * tobacco_multiplier * alcohol_multiplier
-        
-        # Add loading for expenses and profit (25%)
-        loading_factor = 1.25
-        final_premium = risk_adjusted_premium * loading_factor
-        
-        return {
-            'annual_premium': round(final_premium, 2),
-            'monthly_premium': round(final_premium / 12, 2),
-            'base_rate': base_rate,
-            'base_premium': round(base_premium, 2),
-            'smoking_factor': smoking_multiplier,
-            'tobacco_factor': tobacco_multiplier,
-            'alochol_factor': alcohol_multiplier,
-            'bmi_factor': bmi_multiplier,
-            'loading': loading_factor,
-            'age_group': age_group,
-            'bmi': round(bmi,2)
-        }
 
 @app.route('/')
 def home():
@@ -96,39 +16,29 @@ def home():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
-    # Get form data
     age = int(request.form['age'])
     gender = request.form['gender']
-    height_feet = float(request.form['height_feet'])
-    height_inches = float(request.form['height_inches'])
-    total_height = (height_feet * 12 + height_inches) * 0.0254
-    weight_kilogram = float(request.form['weight_kilogram'])
-    weight_grams = float(request.form['weight_grams'])
-    total_weight = weight_kilogram + (weight_grams / 1000)
-    smoker = request.form.get('smoker') == 'yes'
-    tobacco_chewer = request.form.get('chewer') == 'yes'
-    alcoholic = request.form.get('alcoholic') == 'yes'
+
+    height = ((float(request.form['height_feet']) * 12 + 
+               float(request.form['height_inches'])) * 0.0254)
+    weight = float(request.form['weight_kilogram']) + \
+             float(request.form['weight_grams']) / 1000
     coverage = int(request.form['coverage'])
-    
-    # Calculate premium
-    calc = PremiumCalculator()
-    bmi = calc.get_BMI(total_weight,total_height)
-    result = calc.calculate(age, gender, smoker, tobacco_chewer, alcoholic, coverage, bmi)
-    
-    # Pass both result and input data to template
-    return render_template('result.html', 
-                         result=result, 
-                         age=age, 
-                         gender=gender, 
-                         smoker=smoker,
-                         tobacco_chewer = tobacco_chewer,
-                         alcoholic = alcoholic,
-                         coverage=coverage,
-                         height_feet=height_feet,
-                         height_inches=height_inches,
-                         weight_kilogram=weight_kilogram,
-                         weight_grams=weight_grams,
-                         bmi=round(bmi,2))
+    bmi = calculate_BMI(weight, height)
+
+    total_risk_multiplier = (
+        bmi_multiplier(bmi) * 
+        SMOKING_RISK[request.form['smoker']] *
+        ALCOHOL_RISK[request.form['alcoholic']] *
+        TOBACCO_RISK[request.form['chewer']]
+    )
+    calculator = PremiumCalculator()
+    result = calculator.calculate_premium(
+        age, gender, coverage, total_risk_multiplier
+    )
+
+    result['bmi'] = round(bmi,2)
+    return render_template('result.html', result= result)
 
 if __name__ == '__main__':
     import os

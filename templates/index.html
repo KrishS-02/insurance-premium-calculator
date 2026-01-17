@@ -2,126 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insurance Premium Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            color: violet;
-            background-color: #f8f82c;
+            background-color: #e6f9f5;
             padding-top: 50px;
         }
         .calculator-container {
             max-width: 600px;
-            margin: 0 auto;
-            background: greenyellow;
+            margin: auto;
+            background: #87ceeb;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="calculator-container">
-            <h1 class="text-center mb-4">Insurance Premium Calculator</h1>
-            <p class="text-center text-muted mb-4">
-                Calculate your life insurance premium with actuarial transparency
-            </p>
-            
-            <form action="/calculate" method="POST">
-                <div class="mb-3">
-                    <label for="age" class="form-label">Age</label>
-                    <input type="number" class="form-control" id="age" name="age" 
-                           required min="18" max="65" placeholder="Enter your age">
-                    <small class="form-text text-muted">Age must be between 18 and 65</small>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Gender</label>
-                    <select class="form-select" id="gender" name="gender" required>
-                        <option value="">Select gender</option>
-                        <option value="" disabled selected>Select an option</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
+<div class="container">
+    <div class="calculator-container">
 
-                <div class="mb-3">
-                    <label for="height" class="form-label">Height</label>
-                    <div class="input-group">
-                        <input type="number" class="form-control" id="height_feet" name="height_feet" placeholder="Feet" min="0" required>
-                        <span class="input-group-text">Ft</span>
-                        <input type="number" class="form-control" id="height_inches" name="height_inches" placeholder="Inches" min="0" max="11" required>
-                        <span class="input-group-text">In</span>
-                    </div>
-                </div>
+        <h2 class="text-center mb-3">Insurance Premium Calculator</h2>
+        <p class="text-center text-muted">
+            Actuarial-based premium estimation (educational)
+        </p>
 
-                <div class="mb-3">
-                    <label for="weight" class="form-label">Weight</label>
-                    <div class="input-group">
-                        <input type="number" class="form-control" id="weight_kilogram" name="weight_kilogram" placeholder="Kilogram" min="0" required>
-                        <span class="input-group-text">Kg</span>
-                        <input type="number" class="form-control" id="weight_grams" name="weight_grams" placeholder="Grams" min="0" max="999" required>
-                        <span class="input-group-text">Gms</span>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="coverage" class="form-label">Coverage Amount (₹)</label>
-                    <input type="number" class="form-control" id="coverage" name="coverage" 
-                           required step="100000" min="100000" placeholder="e.g., 1000000">
-                    <small class="form-text text-muted">Minimum coverage: ₹1,00,000</small>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="smoker" class="form-label">Do you smoke?</label>
-                    <select class="form-select" id="smoker" name="smoker" required>
-                        <option value="" disabled selected>Select an option</option>
-                        <option value="non-smoker">Non-Smoker</option>
-                        <option value="former-smoker">Former Smoker</option>
-                        <option value="light-smoker">Light Smoker</option>
-                        <option value="moderate-smoker">Moderate Smoker</option>
-                        <option value="heavy-smoker">Heavy Smoker</option>
-                    </select>
-                </div>
+        <form action="/calculate" method="POST">
 
-                <div class="mb-3">
-                    <label for="chewer" class="form-label">Do you chew tobacco?</label>
-                    <select class="form-select" id="chewer" name="chewer" required>
-                        <option value="" disabled selected>Select an option</option>
-                        <option value="non-chewer">Non-Chewer</option>
-                        <option value="former-chewer">Former Chewer</option>
-                        <option value="occasional-chewer">Occasional Chewer</option>
-                        <option value="regular-chewer">Regular Chewer</option>
-                        <option value="heavy-chewer">Heavy Chewer</option>
-                    </select>
-
-                </div>
-
-                <div class="mb-3">
-                    <label for="alcoholic" class="form-label">Do you consume Alcohol?</label>
-                    <select class="form-select" id="alcoholic" name="alcoholic" required>
-                        <option value="" disabled selected>Select an option</option>
-                        <option value="non-alcoholic">Non-Alcoholic</option>
-                        <option value="former-drinker">Former Drinker</option>
-                        <option value="light-drinker">Light Drinker</option>
-                        <option value="moderate-drinker">Moderate Drinker</option>
-                        <option value="heavy-drinker">Heavy Drinker</option>
-                    </select>
-                </div>
-
-                
-                <button type="submit" class="btn btn-primary w-100 mt-3">
-                    Calculate Premium
-                </button>
-            </form>
-            
-            <div class="mt-4 text-center">
-                <small class="text-muted">
-                    This calculator uses simplified actuarial principles for educational purposes
-                </small>
+            <!-- Age -->
+            <div class="mb-3">
+                <label class="form-label">Age</label>
+                <input type="number" class="form-control" name="age" min="18" max="65" required>
             </div>
-        </div>
+
+            <!-- Gender -->
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                <select class="form-select" name="gender" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <!-- Height -->
+            <div class="mb-3">
+                <label class="form-label">Height</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" name="height_feet" placeholder="Feet" required>
+                    <span class="input-group-text">ft</span>
+                    <input type="number" class="form-control" name="height_inches" placeholder="Inches" max="11" required>
+                    <span class="input-group-text">in</span>
+                </div>
+            </div>
+
+            <!-- Weight -->
+            <div class="mb-3">
+                <label class="form-label">Weight</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" name="weight_kilogram" placeholder="Kg" required>
+                    <span class="input-group-text">kg</span>
+                    <input type="number" class="form-control" name="weight_grams" placeholder="g" max="999" required>
+                    <span class="input-group-text">g</span>
+                </div>
+            </div>
+
+            <!-- Smoking -->
+            <div class="mb-3">
+                <label class="form-label">Smoking Habit</label>
+                <select class="form-select" name="smoker" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="non-smoker">Non-smoker</option>
+                    <option value="former-smoker">Former smoker</option>
+                    <option value="light-smoker">Light smoker</option>
+                    <option value="moderate-smoker">Moderate smoker</option>
+                    <option value="heavy-smoker">Heavy smoker</option>
+                </select>
+            </div>
+
+            <!-- Tobacco -->
+            <div class="mb-3">
+                <label class="form-label">Tobacco Chewing</label>
+                <select class="form-select" name="chewer" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="non-chewer">Non-chewer</option>
+                    <option value="former-chewer">Former chewer</option>
+                    <option value="occasional-chewer">Occasional chewer</option>
+                    <option value="regular-chewer">Regular chewer</option>
+                    <option value="heavy-chewer">Heavy chewer</option>
+                </select>
+            </div>
+
+            <!-- Alcohol -->
+            <div class="mb-3">
+                <label class="form-label">Alcohol Consumption</label>
+                <select class="form-select" name="alcoholic" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="non-alcoholic">Non-alcoholic</option>
+                    <option value="former-drinker">Former drinker</option>
+                    <option value="light-drinker">Light drinker</option>
+                    <option value="moderate-drinker">Moderate drinker</option>
+                    <option value="heavy-drinker">Heavy drinker</option>
+                </select>
+            </div>
+
+            <!-- Coverage -->
+            <div class="mb-3">
+                <label class="form-label">Coverage Amount (₹)</label>
+                <input type="number" class="form-control" name="coverage" min="100000" step="100000" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">
+                Calculate Premium
+            </button>
+
+        </form>
+
+        <p class="text-center text-muted mt-3">
+            * Simplified actuarial model for academic use
+        </p>
+
     </div>
+</div>
 </body>
 </html>
